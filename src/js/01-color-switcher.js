@@ -12,7 +12,6 @@ function onStartBtnClick() {
     intervalId = setInterval(() => {
         bodyEl.style.backgroundColor = getRandomHexColor();
     }, 1000);
-    console.log(intervalId);
 }
 
 function onStopBtnClick() {
