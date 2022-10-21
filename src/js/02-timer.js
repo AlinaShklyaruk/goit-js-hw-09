@@ -7,20 +7,14 @@ const inputEl = document.querySelector('input[type="text"]');
 const startBtn = document.querySelector('button[data-start]');
 const timerEl = document.querySelector('.timer');
 const fieldsEl = document.querySelectorAll('.field');
-//console.log(timerEl);
+
 const daysEl = document.querySelector('[data-days]');
 const hoursEl = document.querySelector('[data-hours]');
 const minutesEl = document.querySelector('[data-minutes]');
 const secondsEl = document.querySelector('[data-seconds]');
 
-timerEl.style.display = 'flex';
-timerEl.style.marginRight = '-10px';
-fieldsEl.forEach((field => {
-    field.style.display = 'flex';
-    field.style.alignItems = 'center';
-    field.style.flexDirection = 'column';
-    field.style.marginRight = '10px';
-}));
+const valuesEl = document.querySelectorAll('.value');
+const labelsEl = document.querySelectorAll('.label');
 
 startBtn.disabled = 'true';
 let timerDate = [];
@@ -39,11 +33,14 @@ const options = {
 
     if (selectedDates[0] <= currentDate) {
         Notiflix.Notify.failure('Please choose a date in the future');
-    }
+    } else {
     startBtn.removeAttribute('disabled', true);
     timerDate = selectedDates[0];
+    }
+    
  },
 };
+
 flatpickr(inputEl, options);
 
 const timer = {
@@ -55,19 +52,18 @@ const timer = {
         const startTime = Date.now();
         this.isActive = true;
 
-        const intervalId = setInterval(() => {
+       const intervalId = setInterval(() => {
             const currentTime = Date.now();
-            const deltaTime = timerDate - currentTime;
+           const deltaTime = timerDate - currentTime;
+           if (deltaTime <= 0) {
+               clearInterval(intervalId);
+               return;
+           }
             const timeLeft = convertMs(deltaTime);
-            updateTimerFace(timeLeft);
+           updateTimerFace(timeLeft);
         }, 1000);
     },
-    stop() {
-            clearInterval(intervalId);
-    }
 };
-
-
 
 function convertMs(ms) {
   // Number of milliseconds per unit of time
@@ -93,3 +89,22 @@ function updateTimerFace({ days, hours, minutes, seconds }) {
     minutesEl.textContent = `${minutes}`;
     secondsEl.textContent = `${seconds}`;
 }
+
+timerEl.style.display = 'flex';
+timerEl.style.marginRight = '-10px';
+fieldsEl.forEach((field => {
+    field.style.display = 'flex';
+    field.style.alignItems = 'center';
+    field.style.flexDirection = 'column';
+    field.style.marginRight = '10px';
+}));
+
+valuesEl.forEach(value =>
+    value.style.fontSize = '20px');
+labelsEl.forEach(label => {
+    label.textContent = label.textContent.toUpperCase();
+    label.style.fontSize = '14px';
+}
+    );
+
+    
